@@ -35,7 +35,7 @@ Aplikasi berbasis web interaktif untuk memfasilitasi proses penilaian praktik pe
 
 ### 1. Mengakses Secara Online (GitHub Pages)
 Anda dapat langsung membuka aplikasi melalui tautan GitHub Pages repositori ini:
-`https://<username-github-anda>.github.io/<nama-repositori>/`
+`[https://edusustain.github.io/Penilaian-Praktik-Pengajaran-Sains-Dasar/]`
 
 ### 2. Menjalankan Secara Lokal di Komputer
 1. Unduh (*Download*) atau *Clone* repositori ini:
