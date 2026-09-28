@@ -62,14 +62,13 @@
                         <span>👤</span> Identitas Mahasiswa Praktikan
                     </h2>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div class="sm:col-span-2">
-                            <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Pilih Mahasiswa Praktikan <span class="text-red-500">*</span></label>
-                            <select id="select-mahasiswa" onchange="onSelectMahasiswaChange(this.value)" class="w-full px-3 py-2 border rounded-lg text-sm font-medium focus:ring-2 focus:ring-indigo-500 bg-slate-50">
-                                <option value="">-- Pilih Mahasiswa (Nama / NIM) --</option>
-                            </select>
-                            <!-- Hidden Field -->
-                            <input type="hidden" id="input-nama">
-                            <input type="hidden" id="input-nim">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Nama Mahasiswa <span class="text-red-500">*</span></label>
+                            <input type="text" id="input-nama" placeholder="Contoh: Ahmad Dahlan" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-indigo-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">NIM <span class="text-red-500">*</span></label>
+                            <input type="text" id="input-nim" placeholder="Contoh: 202401001" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-indigo-500">
                         </div>
                         <div class="sm:col-span-2">
                             <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Topik / Materi Pembelajaran Sains</label>
@@ -103,7 +102,7 @@
             <!-- Form Rubrik 5 Indikator -->
             <div class="bg-white rounded-xl shadow-md border border-slate-100 p-6">
                 <h2 class="text-lg font-bold text-slate-800 border-b pb-3 mb-4 flex justify-between items-center">
-                    <span>📋 Rubrik Penilaian Sains (5 Indikator)</span>
+                    <span>📋 Rubrik Penilaian Sains</span>
                     <span id="role-badge" class="text-xs bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full font-bold">Mode: Penilaian Diri</span>
                 </h2>
 
@@ -146,10 +145,8 @@
             <!-- Panel Pencarian -->
             <div class="bg-white p-6 rounded-xl shadow-md border border-slate-100 flex flex-col md:flex-row gap-4 items-end print:hidden">
                 <div class="flex-1">
-                    <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Pilih Mahasiswa</label>
-                    <select id="search-nim" class="w-full px-4 py-2 border rounded-lg text-sm font-semibold bg-slate-50">
-                        <option value="">-- Pilih Mahasiswa --</option>
-                    </select>
+                    <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Masukkan NIM Mahasiswa</label>
+                    <input type="text" id="search-nim" placeholder="Contoh: 202401001" class="w-full px-4 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-indigo-500">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Pilih Sesi</label>
@@ -163,12 +160,12 @@
                 </button>
             </div>
 
-            <!-- Loader -->
+            <!-- Loader / Status Search -->
             <div id="recap-loader" class="text-center py-8 hidden">
                 <p class="text-indigo-600 font-semibold animate-pulse">Mengambil data rekapitulasi dari Google Sheets...</p>
             </div>
 
-            <!-- Hasil Rekapitulasi -->
+            <!-- Hasil Rekapitulasi (Akan Tampil Jika Data Ditemukan) -->
             <div id="recap-content" class="hidden space-y-6">
                 <!-- Ringkasan Identitas & Tombol Cetak -->
                 <div class="bg-white p-6 rounded-xl shadow-md border border-slate-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -218,7 +215,9 @@
                 <!-- Bagian Saran & Catatan Kelebihan -->
                 <div class="bg-white p-6 rounded-xl shadow-md border border-slate-100 space-y-4">
                     <h3 class="text-lg font-bold text-slate-800 border-b pb-2">💬 Catatan Kelebihan & Saran Pengembangan</h3>
-                    <div id="saran-list" class="space-y-3"></div>
+                    <div id="saran-list" class="space-y-3">
+                        <!-- Komponen Umpan Balik akan diisi dinamis oleh JS -->
+                    </div>
                 </div>
             </div>
         </div>
@@ -229,34 +228,7 @@
         // === PASTE URL GOOGLE APPS SCRIPT ANDA DI SINI ===
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxG0WSD4F_1trg9bEULNlJKOjw2tHW0E5vjeaWY-GXq8KJNFB6W5Lu7IS_8QYM8rJef/exec";
 
-        // === DAFTAR MAHASISWA KELAS (Dapat Ditambah/Diubah) ===
-        const daftarMahasiswa = [
-            { nim: "23104050001", nama: "Nayla Mufida" },
-            { nim: "23104050005", nama: "Intan Susanti" },
-            { nim: "23104050006", nama: "Alfina Tri Marini" },
-            { nim: "23104050007", nama: "Raisha Kalila" },
-            { nim: "23104050010", nama: "Siti Khusnul Khotimah" }
-            { nim: "23104050013", nama: "Aryo Muhammad Akso Guritno" },
-            { nim: "23104050015", nama: "Silvia Putri Ramadani" },
-            { nim: "23104050016", nama: "Wafiq Nur Azizah" }
-            { nim: "23104050022", nama: "Valina Irbah Qurrota A'yun" },
-            { nim: "23104050023", nama: "Amelya Chandra Agustiyani" }
-            { nim: "23104050024", nama: "Bayu Prista Rizki Putra" },
-            { nim: "23104050025", nama: "Jesly Rajana Kaes" },
-            { nim: "23104050027", nama: "Achmad Najichul Maulid" }
-            { nim: "23104050031", nama: "Ilzam Adiba Alan Maida" },
-            { nim: "23104050033", nama: "Khoirini Aziz" }
-            { nim: "23104050035", nama: "Haris Rahmad Mudzaki" },
-            { nim: "23104050037", nama: "Febrisman Bagas Satria Anandika" },
-            { nim: "23104050040", nama: "Syauqie Raihanul Azhar Elgi" }
-            { nim: "23104050041", nama: "Weni Kumala Sari" },
-            { nim: "23104050042", nama: "Titi Dwi Kusuma" }
-            { nim: "23104050044", nama: "Halim Hasan Abdullah" },
-            { nim: "23104050047", nama: "M. Imam Fathoni" },
-          
-        ];
-
-        // 5 Indikator Rubrik Sains
+        // 5 Indikator Rubrik
         const rubrikData = [
             "Apersepsi & Penjelasan Konsep Dasar Sains",
             "Penerapan Metode Ilmiah / Scientific Approach",
@@ -271,37 +243,8 @@
         let chartInstance = null;
 
         window.onload = function() {
-            initMahasiswaDropdown();
             renderForm();
         };
-
-        function initMahasiswaDropdown() {
-            const selectForm = document.getElementById('select-mahasiswa');
-            const selectSearch = document.getElementById('search-nim');
-
-            daftarMahasiswa.forEach(mhs => {
-                const optForm = document.createElement('option');
-                optForm.value = mhs.nim;
-                optForm.innerText = `${mhs.nama} (${mhs.nim})`;
-                selectForm.appendChild(optForm);
-
-                const optSearch = document.createElement('option');
-                optSearch.value = mhs.nim;
-                optSearch.innerText = `${mhs.nama} (${mhs.nim})`;
-                selectSearch.appendChild(optSearch);
-            });
-        }
-
-        function onSelectMahasiswaChange(selectedNim) {
-            const mhs = daftarMahasiswa.find(m => m.nim === selectedNim);
-            if (mhs) {
-                document.getElementById('input-nama').value = mhs.nama;
-                document.getElementById('input-nim').value = mhs.nim;
-            } else {
-                document.getElementById('input-nama').value = '';
-                document.getElementById('input-nim').value = '';
-            }
-        }
 
         function switchMainView(view) {
             if (view === 'form') {
@@ -371,14 +314,15 @@
             });
         }
 
+        // POST Data Penilaian ke Google Sheets
         async function submitData() {
             const nama = document.getElementById('input-nama').value.trim();
             const nim = document.getElementById('input-nim').value.trim();
             const statusMsg = document.getElementById('status-message');
             const btnSubmit = document.getElementById('btn-submit');
 
-            if (!nama || !nim) { alert("Harap pilih Mahasiswa terlebih dahulu!"); return; }
-            if (scores.includes(0)) { alert("Harap lengkapi seluruh skor 5 indikator!"); return; }
+            if (!nama || !nim) { alert("Harap isi Nama dan NIM!"); return; }
+            if (scores.includes(0)) { alert("Harap lengkapi semua skor!"); return; }
 
             const sum = scores.reduce((a, b) => a + b, 0);
             const avg = (sum / scores.length).toFixed(2);
@@ -421,13 +365,14 @@
             }
         }
 
+        // GET Data Rekap dari Google Sheets
         async function fetchRecapData() {
-            const nim = document.getElementById('search-nim').value;
+            const nim = document.getElementById('search-nim').value.trim();
             const session = document.getElementById('search-session').value;
             const loader = document.getElementById('recap-loader');
             const content = document.getElementById('recap-content');
 
-            if (!nim) { alert("Pilih Mahasiswa terlebih dahulu!"); return; }
+            if (!nim) { alert("Masukkan NIM terlebih dahulu!"); return; }
 
             loader.classList.remove('hidden');
             content.classList.add('hidden');
@@ -442,11 +387,11 @@
                     content.classList.remove('hidden');
                     renderRecapView(res.data);
                 } else {
-                    alert(`Data penilaian untuk mahasiswa tersebut (${session}) belum ditemukan di Google Sheets.`);
+                    alert(`Data penilaian untuk NIM: ${nim} (${session}) tidak ditemukan di Google Sheets.`);
                 }
             } catch (e) {
                 loader.classList.add('hidden');
-                alert("Gagal mengambil data dari Google Sheets. Pastikan SCRIPT_URL sudah dipasang.");
+                alert("Gagal mengambil data dari Google Sheets. Pastikan SCRIPT_URL sudah terpasang.");
             }
         }
 
@@ -454,6 +399,7 @@
             document.getElementById('recap-nama').innerText = data.nama;
             document.getElementById('recap-meta').innerText = `NIM: ${document.getElementById('search-nim').value} | Topik: ${data.topik || '-'}`;
 
+            // Skor Self, Peer, Lecturer
             const avgSelf = data.self ? data.self.avg : 0;
             
             let avgPeer = 0;
@@ -468,6 +414,7 @@
             document.getElementById('recap-score-peer').innerText = avgPeer.toFixed(2);
             document.getElementById('recap-score-lecturer').innerText = avgLecturer.toFixed(2);
 
+            // Calculation (Dosen 60%, Peer 20%, Self 20%)
             const finalScore = (avgLecturer * 0.6) + (avgPeer * 0.2) + (avgSelf * 0.2);
             document.getElementById('recap-final-score').innerText = finalScore.toFixed(2);
 
@@ -479,9 +426,11 @@
             
             document.getElementById('recap-final-grade').innerText = 'Predikat: ' + grade;
 
+            // Render Radar Chart
             const selfArray = data.self ? data.self.scores : [0,0,0,0,0];
             const lecturerArray = data.lecturer ? data.lecturer.scores : [0,0,0,0,0];
             
+            // Average Peer Array
             let peerArray = [0,0,0,0,0];
             if (data.peer && data.peer.length > 0) {
                 for (let i = 0; i < 5; i++) {
@@ -492,6 +441,7 @@
 
             renderRadarChart(selfArray, peerArray, lecturerArray);
 
+            // Render List Saran & Kelebihan
             const saranList = document.getElementById('saran-list');
             saranList.innerHTML = '';
 
